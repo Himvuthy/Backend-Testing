@@ -17,6 +17,20 @@ def get_db_connection():
         password=os.environ["PGPASSWORD"],
         dbname=os.environ["PGDATABASE"]
     )
+
+@app.route("/")
+def home():
+    return jsonify({
+        "status": "online",
+        "source": "server.py"
+    })
+
+@app.route("/test123")
+def test123():
+    return jsonify({
+        "working": True,
+        "source": "server.py"
+    })
     
 @app.route("/test123")
 def test123():
