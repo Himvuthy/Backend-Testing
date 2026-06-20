@@ -7,7 +7,12 @@ import os
 print("🔥 SERVER.PY LOADED")
 
 app = Flask(__name__)
-CORS(app)
+
+CORS(
+    app,
+    resources={r"/*": {"origins": "*"}}
+)
+
 
 def get_db_connection():
     return psycopg2.connect(
@@ -18,6 +23,7 @@ def get_db_connection():
         dbname=os.environ["PGDATABASE"]
     )
 
+
 @app.route("/")
 def home():
     return jsonify({
@@ -25,12 +31,6 @@ def home():
         "source": "server.py"
     })
 
-@app.route("/test123")
-def test123():
-    return jsonify({
-        "working": True,
-        "source": "server.py"
-    })
 
 @app.route("/api/login", methods=["POST"])
 def login():
@@ -78,6 +78,7 @@ def login():
             "error": str(e)
         }), 500
 
+
 @app.route("/api/admin/stats")
 def admin_stats():
     try:
@@ -110,6 +111,7 @@ def admin_stats():
             "error": str(e)
         }), 500
 
+
 @app.route("/api/users")
 def users():
     try:
@@ -132,12 +134,12 @@ def users():
             "success": True,
             "users": [
                 {
-                    "id": r[0],
-                    "name": r[1],
-                    "role": r[2],
-                    "email": r[3]
+                    "id": row[0],
+                    "name": row[1],
+                    "role": row[2],
+                    "email": row[3]
                 }
-                for r in rows
+                for row in rows
             ]
         })
 
@@ -147,6 +149,7 @@ def users():
             "error": str(e)
         }), 500
 
+
 @app.route("/api/users/<int:user_id>", methods=["DELETE"])
 def delete_user(user_id):
     try:
@@ -154,12 +157,12 @@ def delete_user(user_id):
         cur = conn.cursor()
 
         cur.execute(
-            "DELETE FROM USERACCOUNT WHERE eid=%s",
+            "DELETE FROM USERACCOUNT WHERE eid = %s",
             (user_id,)
         )
 
         cur.execute(
-            "DELETE FROM ENTITY WHERE eid=%s",
+            "DELETE FROM ENTITY WHERE eid = %s",
             (user_id,)
         )
 
@@ -168,13 +171,16 @@ def delete_user(user_id):
         cur.close()
         conn.close()
 
-        return jsonify({"success": True})
+        return jsonify({
+            "success": True
+        })
 
     except Exception as e:
         return jsonify({
             "success": False,
             "error": str(e)
         }), 500
+
 
 @app.route("/api/students")
 def students():
@@ -183,12 +189,13 @@ def students():
         cur = conn.cursor()
 
         cur.execute("""
-            SELECT e.eid,
-                   e.fullname,
-                   u.email,
-                   e.gender,
-                   e.phonenumber,
-                   b.fingerindex
+            SELECT
+                e.eid,
+                e.fullname,
+                u.email,
+                e.gender,
+                e.phonenumber,
+                b.fingerindex
             FROM ENTITY e
             JOIN ROLE r ON e.roleid = r.roleid
             JOIN USERACCOUNT u ON e.eid = u.eid
@@ -206,14 +213,14 @@ def students():
             "success": True,
             "users": [
                 {
-                    "id": r[0],
-                    "name": r[1],
-                    "email": r[2],
-                    "sex": r[3],
-                    "phone": r[4],
-                    "fingerprint_id": r[5]
+                    "id": row[0],
+                    "name": row[1],
+                    "email": row[2],
+                    "sex": row[3],
+                    "phone": row[4],
+                    "fingerprint_id": row[5]
                 }
-                for r in rows
+                for row in rows
             ]
         })
 
@@ -223,5 +230,9 @@ def students():
             "error": str(e)
         }), 500
 
+
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    app.run(
+        host="0.0.0.0",
+        port=int(os.environ.get("PORT", 5000))
+    )
