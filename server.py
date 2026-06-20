@@ -4,6 +4,8 @@ from werkzeug.security import check_password_hash
 import psycopg2
 import os
 
+print("🔥 SERVER.PY LOADED")
+
 app = Flask(__name__)
 CORS(app)
 
@@ -15,7 +17,14 @@ def get_db_connection():
         password=os.environ["PGPASSWORD"],
         dbname=os.environ["PGDATABASE"]
     )
-
+    
+@app.route("/test123")
+def test123():
+    return jsonify({
+        "working": True,
+        "source": "server.py"
+    })
+    
 @app.route("/")
 def home():
     return jsonify({"status": "online"})
