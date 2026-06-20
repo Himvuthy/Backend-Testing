@@ -3,3 +3,5 @@ Flask-Cors
 psycopg2-binary
 Werkzeug
 gunicorn
+boto3
+Pillow
