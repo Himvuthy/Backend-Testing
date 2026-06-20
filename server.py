@@ -31,17 +31,6 @@ def test123():
         "working": True,
         "source": "server.py"
     })
-    
-@app.route("/test123")
-def test123():
-    return jsonify({
-        "working": True,
-        "source": "server.py"
-    })
-    
-@app.route("/")
-def home():
-    return jsonify({"status": "online"})
 
 @app.route("/api/login", methods=["POST"])
 def login():
