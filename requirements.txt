@@ -5,3 +5,4 @@ Werkzeug
 gunicorn
 boto3
 Pillow
+pg8000
