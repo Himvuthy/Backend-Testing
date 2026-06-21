@@ -32,11 +32,11 @@ def get_db_connection():
 R2_ACCESS_KEY = "351205bf19a9cb1536f7c1e9dd39a83a"
 R2_SECRET_KEY = "3cc04f1b903bc155a906858fb194212997e95a6882630c7b41b10952ed535939"
 R2_ENDPOINT   = "https://19ab588d250cb7479c593ca7df30e5ff.r2.cloudflarestorage.com"
-R2_BUCKET     = "smart-attendance"
+R2_BUCKET     = "cloud-png-storage"
 
 # Public URL base — you need to set this in Cloudflare R2 > Settings > Public Access
 # For now we use the R2.dev subdomain or your custom domain
-R2_PUBLIC_URL = os.environ.get("R2_PUBLIC_URL", "")
+R2_PUBLIC_URL = os.environ.get("R2_PUBLIC_URL", "https://pub-7ab8922a9a2c464b8fafa032bca6c666.r2.dev")
 
 s3 = boto3.client(
     "s3",
